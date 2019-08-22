@@ -1,5 +1,10 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
-git clone -b deploy --single-branch https://github.com/ToeFluf/ApartmentHub.git
-echo "Starting node server"
+echo "Pulling from deploy"
+git pull origin master
+echo "Successfully pulled from git"
+echo "Restarting node server"
 node server.js
+echo "Server restarted successfully"
+
+
