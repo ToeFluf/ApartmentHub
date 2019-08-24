@@ -7,11 +7,18 @@ const https = require('https')
 const url = require('url')
 const qs = require('querystring')
 
+/**
+* @brief Authorization class used to manage Google's OAuth2Client
+* @member folderPath = path to credentials folderPath
+* @member scopes = scopes to gain access to
+* @member auth = !!!important!!! this holds the authorization object once completed, otherwise is null if something fails
+**/
 
 class OAuth2Client{
     constructor(credFolder, scopes){
         this.folderPath = credFolder;
         this.scopes = scopes;
+        this.auth = null;
 
         this.createAuth();
 
@@ -56,6 +63,17 @@ class OAuth2Client{
             this.redirect_uris = credentials.web.redirect_uris;
             this.auth = new google.auth.OAuth2(this.client_id, this.client_secret, this.redirect_uris[0]);
 
+            this.auth.on('tokens', (tokens) => {
+              if (tokens.refresh_token) {
+                  fs.writeFile(path.join(this.folderPath, 'refresh_token.json'), JSON.stringify(token.refresh_token), (err) => {
+                          if (err) return console.error(err);
+                          console.log('Refresh Token stored to', path.join(this.folderPath, 'refresh_token.json'));
+                  });
+                console.log(tokens.refresh_token);
+              }
+              console.log(tokens.access_token);
+            });
+
         }catch(e){
             throw new Exception("No Credentials Exception");
             return console.error("Error when attempting to read from credentials file, authentication impossible");
@@ -72,7 +90,6 @@ class OAuth2Client{
         console.log('Authorize this app by visiting this url:', authorizeUrl);
 
         const server = http.createServer((req, res) => {
-            console.log(req);
             if (req.url.indexOf('/oauth2callback') > -1) {
                 const qs = new url.URL(req.url, 'http://localhost:3000').searchParams;
                 const code = qs.get('code');
@@ -86,14 +103,10 @@ class OAuth2Client{
                             if (err) return console.error(err);
                             console.log('Token stored to', path.join(this.folderPath, 'token.json'));
                     });
-                    fs.writeFile(path.join(this.folderPath, 'refresh_token.json'), JSON.stringify(token.refresh_token), (err) => {
-                            if (err) return console.error(err);
-                            console.log('Refresh Token stored to', path.join(this.folderPath, 'refresh_token.json'));
-                    });
                 });
 
                 res.end("Authentication complete, you can close the browser");
-                server.end();
+                server.close();
             }
 
         }).listen(3000);
@@ -102,8 +115,8 @@ class OAuth2Client{
     }
 
     getTokenByRe_token(){
-        console.log("Skipping refresh")
-        return this.getNewToken();
+        //console.log("Skipping refresh")
+        //return this.getNewToken();
 
         try{
             fs.accessSync(path.join(this.folderPath, 'refresh_token.json'));
@@ -128,6 +141,14 @@ class OAuth2Client{
                         refresh_token: refresh_token
                     }
                 };
+
+                const server = http.createServer((req, res)=>{
+                    console.log(req);
+                    res.end(200)
+
+                }).listen(3000, 'localhost', ()=>{
+                    console.log("Listening for refresh on localhost:3000")
+                })
 
                 try{
                     let req = http.request(options, (res) => {
