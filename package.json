@@ -1,0 +1,25 @@
+{
+  "name": "apartment-hub",
+  "version": "1.0.0",
+  "description": "Hub for the apartment",
+  "main": "deploy.js",
+  "dependencies": {
+    "destroyer": "^0.0.0",
+    "googleapis": "^42.0.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ToeFluf/ApartmentHub.git"
+  },
+  "author": "Daniel Schmidt & Reece mathews",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ToeFluf/ApartmentHub/issues"
+  },
+  "homepage": "https://github.com/ToeFluf/ApartmentHub#readme"
+}
