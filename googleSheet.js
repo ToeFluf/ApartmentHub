@@ -33,13 +33,17 @@ function addTransaction(sheetId, updateValueArray){
                     "values": [[(lastRow + updateValueArray.length)]]
                 },
                 {
-                    "range":"Non Recurring!A" + (lastRow + 1) + ":F" + (lastRow + updateValueArray.length),
+                    "range":"Non Recurring!A" + (lastRow + 1) + ":E" + (lastRow + updateValueArray.length),
                     "majorDimension": "ROWS",
                     "values": updateValueArray
                 }
             ]
         }
-        sheet.spreadsheets.values.batchUpdate({"spreadsheetId":sheetId, "resource":sendThis})
+        sheet.spreadsheets.values.batchUpdate({"spreadsheetId":sheetId, "resource":sendThis}, (err, res)=>{
+            if(err){
+                return console.error(err)
+            }
+        })
     })
 }
 
@@ -129,7 +133,7 @@ class GoogleSheet{
 };
 */
 
-const SHEET_ID = '1In0y8L8Sq2hkPjwfWq9PFseEfXCAbMiuTGkMj9dtpsA';
-addTransaction(SHEET_ID, [[1,2,3,4,5,6],[1,2,3,4,5,6]])
+//const SHEET_ID = '1In0y8L8Sq2hkPjwfWq9PFseEfXCAbMiuTGkMj9dtpsA';
+//addTransaction(SHEET_ID, [[1,2,3,4,5,6],[1,2,3,4,5,6]])
 
 module.exports = addTransaction

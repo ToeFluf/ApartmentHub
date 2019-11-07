@@ -6,7 +6,6 @@ const http = require('http');
 const https = require('https')
 const url = require('url')
 const qs = require('querystring')
-//const Buffer = require('buffer')
 
 /**
 * @brief Authorization class used to manage Google's OAuth2Client
@@ -73,7 +72,7 @@ class OAuth2Client{
                               if (err) return console.error(err);
                               console.log('Refresh Token stored to', path.join(this.folderPath, 'refresh_token.json'));
                       });
-                      console.log(token.refresh_token);
+                      //console.log(token.refresh_token);
                     }
 
                     if(token.access_token){
@@ -81,7 +80,7 @@ class OAuth2Client{
                               if (err) return console.error(err);
                               console.log('Token stored to', path.join(this.folderPath, 'token.json'));
                         });
-                        console.log(token.access_token);
+                        //console.log(token.access_token);
                     }
             });
 
@@ -113,9 +112,9 @@ class OAuth2Client{
                     }
 
                     this.auth.setCredentials(token);
-                    console.log(token);
+                    //console.log(token);
                 });
-                console.log(this.auth)
+                //console.log(this.auth)
 
                 res.end("Authentication complete, you can close the browser");
                 server.close();
@@ -132,12 +131,12 @@ class OAuth2Client{
             let data = fs.readFileSync(path.join(this.folderPath, 'refresh_token.json'));
 
             let {refresh_token} = JSON.parse(data);
-            console.log(refresh_token)
+            //console.log(refresh_token)
 
             this.auth.setCredentials({
                 refresh_token:refresh_token
             })
-            console.log(this.auth)
+            //console.log(this.auth)
 
         }catch(e){
             console.error("Error when attempting to read form 'refresh_token.json'. Reverting to getting a new token");

@@ -5,12 +5,14 @@
   "main": "deploy.js",
   "dependencies": {
     "destroyer": "^0.0.0",
+    "express": "^4.17.1",
     "googleapis": "^42.0.0"
   },
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node server.js",
+    "get-libs" : "npm install destroyer googleapis"
   },
   "repository": {
     "type": "git",
